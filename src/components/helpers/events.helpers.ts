@@ -8,8 +8,10 @@ export const getNodeIdFromNodeClickEvent = (
   let counter = 0;
   while (counter < max_jumps) {
     counter++;
-    el = el.parentElement as unknown as HTMLElement;
-    if (el.classList.contains("gly-node")) return el.getAttribute("data-id");
+    if (el && el.parentElement) {
+      el = el.parentElement as unknown as HTMLElement;
+      if (el.classList.contains("gly-node")) return el.getAttribute("data-id");
+    }
   }
 
   return null;

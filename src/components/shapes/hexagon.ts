@@ -1,7 +1,16 @@
 import { TemplateAPI, Node } from "@livereader/graphly-d3";
 
-const shapeBuilder = (data: any, templateApi: typeof TemplateAPI) => {
-  const { ShapeStyle, TextCollection, CollectionStyle, Shape } = templateApi;
+const shapeBuilder = (data: Node) => {
+  const {
+    Alignment,
+    ShapeStyle,
+    TextCollection,
+    CollectionStyle,
+    Shape,
+    TagShape,
+    TagStyle,
+    TagCollection,
+  } = TemplateAPI;
 
   const shape = Shape.Polygon(6, 300, 20);
 
@@ -11,14 +20,17 @@ const shapeBuilder = (data: any, templateApi: typeof TemplateAPI) => {
     shape.style("stroke", "white");
     shape.style("stroke-width", "10px");
     shape.style("stroke-dasharray", "30,30");
-  }
 
-  const titleShape = TextCollection(
-    data.payload?.title ?? "",
-    CollectionStyle(300, 400, 30, 320, 10, 10, 1, TemplateAPI.Alignment.Center),
-    [ShapeStyle("class", "gly_text.dark"), ShapeStyle("font-size", "5em")]
-  );
-  shape.append(() => titleShape.node());
+    const tags = TagCollection(
+      ["Tag text"],
+      CollectionStyle(300, 400, 30, 620, 10, 10, 1, Alignment.Left),
+      TagStyle(0, [
+        ShapeStyle("class", "gly_text.dark"),
+        ShapeStyle("font-size", "5em"),
+      ])
+    );
+    shape.append(() => tags.node());
+  }
 
   return shape;
 };

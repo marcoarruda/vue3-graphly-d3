@@ -6,7 +6,11 @@ import { ForceSimulation, Node } from "@livereader/graphly-d3";
 
 import Hexagon from "./shapes/hexagon";
 import { Event } from "@livereader/graphly-d3";
-import { getNodeIdFromNodeClickEvent } from "./helpers/events.helpers";
+import {
+  getNodeIdFromNodeClickEvent,
+  selectNodeById,
+  updateNodesPayload,
+} from "./helpers";
 import { nodes, links } from "./stubs";
 
 const graphly = ref<ForceSimulation | null>();
@@ -20,12 +24,24 @@ onMounted(() => {
 
   simulation.templateStore.add("hexagon", Hexagon);
 
+  simulation.on(Event.EnvironmentClick, (event: PointerEvent) => {
+    simulation.selectedNodes = [];
+    updateNodesPayload(nodes, simulation);
+    simulation.render(graph);
+  });
+
+  simulation.on(Event.NodeDragStart, (event: { subject: { id: string } }) => {
+    const node_id = event.subject.id;
+    if (node_id) {
+      selectNodeById(simulation, node_id);
+    }
+  });
+
   simulation.on(Event.NodeClick, (event: PointerEvent) => {
     const node_id = getNodeIdFromNodeClickEvent(event);
-    // const node = nodes.find((node) => node.id === node_id) as Node;
-    // node.payload['selected'] = true;
-    if (node_id)
-      simulation.selectedNodes = [node_id]
+    if (node_id) {
+      selectNodeById(simulation, node_id);
+    }
   });
 
   const graph = {
