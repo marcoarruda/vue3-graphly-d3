@@ -13,10 +13,23 @@ import {
 } from "./helpers";
 import { nodes, links } from "./stubs";
 
+import { io } from "socket.io-client";
+
 const graphly = ref<ForceSimulation | null>();
+// const socketioAddress = ref<string>(process.env.SOCKET_SERVER);
 
 onMounted(() => {
   if (!graphly.value) return;
+
+  const socketioAddress = import.meta.env.VITE_SOCKET_SERVER;
+  console.log(socketioAddress);
+  const socket = io(socketioAddress);
+  socket.on("message", function (data) {
+    console.log(data);
+  });
+  function sendMsg() {
+    socket.emit("message", "HELLO WORLD");
+  }
 
   const simulation = graphly.value.simulation as unknown as ForceSimulation;
 
