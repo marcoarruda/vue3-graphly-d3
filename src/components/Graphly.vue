@@ -25,7 +25,7 @@ function setupSimulation(socket: Socket, graph: Graph) {
   const simulation = graphly.value.simulation as unknown as ForceSimulation;
 
   simulation.selectedNodes = ["node1"];
-  simulation.envGravity = 0
+  simulation.envGravity = 0;
 
   simulation.templateStore.add("hexagon", Hexagon);
 
@@ -81,7 +81,9 @@ function setupSimulation(socket: Socket, graph: Graph) {
 onMounted(() => {
   const socketioAddress = import.meta.env.VITE_SOCKET_SERVER;
   console.log(socketioAddress);
-  const socket: Socket = io(socketioAddress);
+  const socket: Socket = io(socketioAddress, {
+    cert: "*.workloud.io",
+  });
   socket.on("connect", function () {
     console.log("connection established");
     socket.emit("state");
