@@ -13,6 +13,7 @@ import { io, Socket } from "socket.io-client";
 import { IUser } from "./helpers/interfaces";
 import { Simulation } from "d3-force";
 
+const loading = ref<boolean>(true);
 const users = ref<IUser[]>([]);
 const user = ref<IUser | null>(null);
 
@@ -85,6 +86,7 @@ onMounted(() => {
     cert: "*.workloud.io",
   });
   socket.on("connect", function () {
+    loading.value = false;
     console.log("connection established");
     socket.emit("state");
     socket.emit("getdata");
@@ -117,7 +119,8 @@ onMounted(() => {
 
 <template>
   <div style="height: 80vh">
-    <GraphlyD3 ref="graphly" :dark="true" />
+    <h3 v-if="loading">Loading... (it may take a minute to synchronize with the server)</h3>
+    <GraphlyD3 v-else ref="graphly" :dark="true" />
   </div>
   <div>Users connected: {{ users.length }}</div>
   <p v-if="user">
