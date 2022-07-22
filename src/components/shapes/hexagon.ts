@@ -14,18 +14,19 @@ const shapeBuilder = (data: Node) => {
 
   const shape = Shape.Polygon(6, 300, 20);
 
-  shape.style("fill", data.payload?.color ?? "blue");
+  shape.style("fill", data.payload?.selected?.color ?? "grey");
 
   if (data.payload.selected) {
-    shape.style("stroke", "white");
+    shape.style("stroke", data.payload.selected.color);
     shape.style("stroke-width", "10px");
     shape.style("stroke-dasharray", "30,30");
 
     const tags = TagCollection(
-      ["Tag text"],
-      CollectionStyle(300, 400, 30, 620, 10, 10, 1, Alignment.Left),
+      [data.payload.selected.id.slice(0,10)],
+      CollectionStyle(300, 1000, 30, 620, 10, 10, 2, Alignment.Left),
       TagStyle(0, [
         ShapeStyle("class", "gly_text.dark"),
+        ShapeStyle("font-color", "red"),
         ShapeStyle("font-size", "5em"),
       ])
     );
